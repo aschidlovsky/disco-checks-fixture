@@ -1,8 +1,8 @@
 // A mock auth service: issues a session token for the one test account it is given by environment.
 const http = require("node:http");
 const port = Number(process.env.MOCK_AUTH_PORT || 4010);
-const user = process.env.E2E_USER;
-const password = process.env.E2E_PASSWORD;
+const user = process.env.MOCK_AUTH_USER;
+const password = process.env.MOCK_AUTH_PASSWORD;
 http.createServer((req, res) => {
   if (req.method !== "POST" || req.url !== "/login") { res.statusCode = 404; return res.end(); }
   let body = "";
