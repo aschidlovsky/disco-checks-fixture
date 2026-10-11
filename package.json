@@ -1,0 +1,15 @@
+{
+  "name": "disco-checks-fixture",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A tiny app with Playwright API checks, used to prove Disco check recipes end to end.",
+  "scripts": {
+    "start": "node app/server.js",
+    "mock-auth": "node app/mock-auth.js",
+    "test:e2e": "playwright test",
+    "list:e2e": "playwright test --list"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.47.2"
+  }
+}
