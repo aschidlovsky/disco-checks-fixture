@@ -1,7 +1,8 @@
 // @ts-check
 const { test, expect } = require("@playwright/test");
+const { apiHeaders } = require("../app/test-helpers");
 
-const headers = { "x-api-token": process.env.E2E_API_TOKEN || "" };
+const headers = apiHeaders();
 
 test("the app reports healthy @disco:tc-2232abe9", async ({ request }) => {
   const res = await request.get("/health");
