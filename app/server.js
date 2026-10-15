@@ -11,7 +11,17 @@ http.createServer((req, res) => {
   if (req.headers["x-api-token"] !== apiToken || !apiToken) { res.statusCode = 403; return res.end(JSON.stringify({ error: "forbidden" })); }
   if (req.method === "GET" && req.url === "/todos") return res.end(JSON.stringify(todos));
   if (req.method === "POST" && req.url === "/todos") {
-    if (firstPost) { firstPost = false; res.statusCode = 500; return res.end(JSON.stringify({ error: "warming up" })); }
+    // INI-102 F9 live leg: the first todo after boot fails only when someone signed in first (a full run does; a
+    // run of this one scenario doesn't) — a flake the check can't see.
+    if (firstPost) {
+      firstPost = false;
+      return fetch(`http://127.0.0.1:${process.env.MOCK_AUTH_PORT || 4010}/count`).then((r) => r.json()).catch(() => ({ logins: 0 })).then(({ logins }) => {
+        if (logins > 0) { res.statusCode = 500; return res.end(JSON.stringify({ error: "warming up" })); }
+        let body = "";
+        req.on("data", (chunk) => { body += chunk; });
+        req.on("end", () => { const todo = { id: todos.length + 1, ...JSON.parse(body || "{}") }; todos.push(todo); res.statusCode = 201; res.end(JSON.stringify(todo)); });
+      });
+    }
     let body = "";
     req.on("data", (chunk) => { body += chunk; });
     return req.on("end", () => { const todo = { id: todos.length + 1, ...JSON.parse(body || "{}") }; todos.push(todo); res.statusCode = 201; res.end(JSON.stringify(todo)); });
