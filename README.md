@@ -9,3 +9,5 @@ The app needs `E2E_API_TOKEN`; mock auth holds the account as
 test account as `E2E_USER`/`E2E_PASSWORD` — test values only.
 
 <!-- INI-102 F10a live leg (head 1) -->
+
+<!-- INI-102 F10a live leg (head 2) -->
