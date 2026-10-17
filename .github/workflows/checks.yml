@@ -1,3 +1,4 @@
+# F11c live leg: an edited workflow (still runs the same checks)
 name: checks
 on:
   push:
