@@ -26,3 +26,5 @@ test("refuses a request without the API token", async ({ request }) => {
   const res = await request.get("/todos");
   expect(res.status()).toBe(403);
 });
+
+// F11c live leg: an edit to a protected check
