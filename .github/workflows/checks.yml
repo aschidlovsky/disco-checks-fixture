@@ -1,0 +1,32 @@
+name: checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    env:
+      E2E_API_TOKEN: ci-token
+      E2E_USER: ci-user
+      E2E_PASSWORD: ci-pass
+      MOCK_AUTH_USER: ci-user
+      MOCK_AUTH_PASSWORD: ci-pass
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: |
+          node app/server.js &
+          node app/mock-auth.js &
+          sleep 2
+          npx playwright test
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: disco-report
+          path: test-results/report.json
