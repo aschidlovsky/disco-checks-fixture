@@ -13,6 +13,14 @@ http.createServer((req, res) => {
     req.on("data", (chunk) => { body += chunk; });
     return req.on("end", () => { const todo = { id: todos.length + 1, ...JSON.parse(body || "{}") }; todos.push(todo); res.statusCode = 201; res.end(JSON.stringify(todo)); });
   }
+  const match = /^\/todos\/(\d+)$/.exec(req.url || "");
+  if (req.method === "DELETE" && match) {
+    const index = todos.findIndex((todo) => todo.id === Number(match[1]));
+    if (index === -1) { res.statusCode = 404; return res.end(JSON.stringify({ error: "not found" })); }
+    todos.splice(index, 1);
+    res.statusCode = 204;
+    return res.end();
+  }
   res.statusCode = 404;
   res.end(JSON.stringify({ error: "not found" }));
 }).listen(port, "127.0.0.1", () => console.log(`app listening on ${port}`));
