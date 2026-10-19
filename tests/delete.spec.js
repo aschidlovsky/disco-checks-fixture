@@ -4,7 +4,7 @@ const { apiHeaders } = require("../app/test-helpers");
 
 const headers = apiHeaders();
 
-test("deletes a todo", async ({ request }) => {
+test("deletes a todo @disco:tc-0f50e948", async ({ request }) => {
   const created = await (await request.post("/todos", { headers, data: { title: "to delete" } })).json();
   const res = await request.delete(`/todos/${created.id}`, { headers });
   expect(res.status()).toBe(204);
