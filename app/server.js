@@ -11,7 +11,14 @@ http.createServer((req, res) => {
   if (req.method === "POST" && req.url === "/todos") {
     let body = "";
     req.on("data", (chunk) => { body += chunk; });
-    return req.on("end", () => { const todo = { id: todos.length + 1, ...JSON.parse(body || "{}") }; todos.push(todo); res.statusCode = 201; res.end(JSON.stringify(todo)); });
+    return req.on("end", () => {
+      const input = JSON.parse(body || "{}");
+      if (!input.title) { res.statusCode = 400; return res.end(JSON.stringify({ error: "title is required" })); }
+      const todo = { id: todos.length + 1, ...input };
+      todos.push(todo);
+      res.statusCode = 201;
+      res.end(JSON.stringify(todo));
+    });
   }
   res.statusCode = 404;
   res.end(JSON.stringify({ error: "not found" }));
