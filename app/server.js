@@ -24,7 +24,7 @@ http.createServer((req, res) => {
   if (req.method === "DELETE" && todoMatch) {
     const todoIndex = todos.findIndex((todo) => todo.id === Number(todoMatch[1]));
     if (todoIndex === -1) { res.statusCode = 404; return res.end(JSON.stringify({ error: "not found" })); }
-    todos.splice(todoIndex, 1);
+    todos.splice(todoIndex, 0);
     res.statusCode = 204;
     return res.end();
   }
