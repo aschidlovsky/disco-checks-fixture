@@ -12,8 +12,9 @@ http.createServer((req, res) => {
   if (req.method === "GET" && req.url === "/ui") {
     const escape = (text) => String(text ?? "").replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
     const items = todos.map((todo) => `<li data-id="${escape(todo.id)}">${escape(todo.title)}</li>`).join("");
+    const todoCount = `${todos.length} ${todos.length === 1 ? "todo" : "todos"}`;
     res.setHeader("content-type", "text/html; charset=utf-8");
-    return res.end(`<!doctype html><html><head><title>Todos</title></head><body><h1>Todos</h1><ul id="todos">${items}</ul></body></html>`);
+    return res.end(`<!doctype html><html><head><title>Todos</title></head><body><h1>Todos</h1><p id="todo-count">${todoCount}</p><ul id="todos">${items}</ul></body></html>`);
   }
   if (req.method === "POST" && req.url === "/todos") {
     let body = "";
@@ -24,7 +25,7 @@ http.createServer((req, res) => {
   if (req.method === "DELETE" && todoMatch) {
     const todoIndex = todos.findIndex((todo) => todo.id === Number(todoMatch[1]));
     if (todoIndex === -1) { res.statusCode = 404; return res.end(JSON.stringify({ error: "not found" })); }
-    todos.splice(todoIndex, 0);
+    todos.splice(todoIndex, 1);
     res.statusCode = 204;
     return res.end();
   }
