@@ -9,6 +9,12 @@ http.createServer((req, res) => {
   if (req.url === "/health") return res.end(JSON.stringify({ ok: true }));
   if (req.headers["x-api-token"] !== apiToken || !apiToken) { res.statusCode = 403; return res.end(JSON.stringify({ error: "forbidden" })); }
   if (req.method === "GET" && req.url === "/todos") return res.end(JSON.stringify(todos));
+  if (req.method === "GET" && req.url === "/ui") {
+    const escape = (text) => String(text ?? "").replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
+    const items = todos.map((todo) => `<li data-id="${escape(todo.id)}">${escape(todo.title)}</li>`).join("");
+    res.setHeader("content-type", "text/html; charset=utf-8");
+    return res.end(`<!doctype html><html><head><title>Todos</title></head><body><h1>Todos</h1><ul id="todos">${items}</ul></body></html>`);
+  }
   if (req.method === "POST" && req.url === "/todos") {
     let body = "";
     req.on("data", (chunk) => { body += chunk; });

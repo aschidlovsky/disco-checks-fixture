@@ -20,6 +20,8 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
+      # Browser checks record video, which needs Playwright's own ffmpeg.
+      - run: npx playwright install ffmpeg
       - run: |
           node app/server.js &
           node app/mock-auth.js &
