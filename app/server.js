@@ -3,6 +3,7 @@ const http = require("node:http");
 const port = Number(process.env.PORT || 4000);
 const apiToken = process.env.E2E_API_TOKEN;
 const todos = [];
+let nextTodoId = 1;
 http.createServer((req, res) => {
   res.setHeader("content-type", "application/json");
   if (req.url === "/health") return res.end(JSON.stringify({ ok: true }));
@@ -11,7 +12,15 @@ http.createServer((req, res) => {
   if (req.method === "POST" && req.url === "/todos") {
     let body = "";
     req.on("data", (chunk) => { body += chunk; });
-    return req.on("end", () => { const todo = { id: todos.length + 1, ...JSON.parse(body || "{}") }; todos.push(todo); res.statusCode = 201; res.end(JSON.stringify(todo)); });
+    return req.on("end", () => { const todo = { id: nextTodoId++, ...JSON.parse(body || "{}") }; todos.push(todo); res.statusCode = 201; res.end(JSON.stringify(todo)); });
+  }
+  const todoMatch = req.url.match(/^\/todos\/(\d+)$/);
+  if (req.method === "DELETE" && todoMatch) {
+    const todoIndex = todos.findIndex((todo) => todo.id === Number(todoMatch[1]));
+    if (todoIndex === -1) { res.statusCode = 404; return res.end(JSON.stringify({ error: "not found" })); }
+    todos.splice(todoIndex, 1);
+    res.statusCode = 204;
+    return res.end();
   }
   res.statusCode = 404;
   res.end(JSON.stringify({ error: "not found" }));
