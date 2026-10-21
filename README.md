@@ -12,3 +12,4 @@ Deleted todos are soft-deleted: they stay in memory with `deleted: true` and are
 <!-- LPB-1 live leg 2026-10-20: link an existing PR to a bug -->
 <!-- MPV-1 live leg: a merged PR keeps its head verdict. -->
 <!-- LRF-1 live leg: head 1. -->
+<!-- LRF-1 live leg: head 2. -->
