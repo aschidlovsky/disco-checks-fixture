@@ -10,6 +10,8 @@ http.createServer((req, res) => {
   if (req.headers["x-api-token"] !== apiToken || !apiToken) { res.statusCode = 403; return res.end(JSON.stringify({ error: "forbidden" })); }
   if (req.method === "GET" && req.url === "/todos") return res.end(JSON.stringify(todos.filter((todo) => !todo.deleted)));
   if (req.method === "GET" && req.url === "/ui") {
+    // The todo page is served in British English only; other locales get 406.
+    if (!String(req.headers["accept-language"] ?? "").startsWith("en-GB")) { res.statusCode = 406; res.setHeader("content-type", "text/plain"); return res.end("en-GB only"); }
     const escape = (text) => String(text ?? "").replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
     const items = todos.filter((todo) => !todo.deleted).map((todo) => `<li data-id="${escape(todo.id)}">${escape(todo.title)}</li>`).join("");
     res.setHeader("content-type", "text/html; charset=utf-8");
