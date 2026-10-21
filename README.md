@@ -11,3 +11,4 @@ test account as `E2E_USER`/`E2E_PASSWORD` — test values only.
 Deleted todos are soft-deleted: they stay in memory with `deleted: true` and are hidden from `GET /todos` and `/ui`.
 <!-- LPB-1 live leg 2026-10-20: link an existing PR to a bug -->
 <!-- MPV-1 live leg: a merged PR keeps its head verdict. -->
+<!-- FOK-1 live leg: second head (both runs on the worktree host). -->
