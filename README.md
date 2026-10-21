@@ -9,3 +9,4 @@ The app needs `E2E_API_TOKEN`; mock auth holds the account as
 test account as `E2E_USER`/`E2E_PASSWORD` — test values only.
 
 Deleted todos are soft-deleted: they stay in memory with `deleted: true` and are hidden from `GET /todos` and `/ui`.
+<!-- LPB-1 live leg 2026-10-20: link an existing PR to a bug -->
