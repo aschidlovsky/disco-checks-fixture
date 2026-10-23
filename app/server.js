@@ -7,7 +7,7 @@ const todos = [];
 const ACCOUNT_PAGE = `<!doctype html><html><head><title>Account</title><style>
 body { font-family: sans-serif; margin: 0; }
 header { display: flex; justify-content: flex-end; padding: 12px 16px; background: #f3f2f1; }
-#flyout { position: absolute; top: 56px; right: 16px; width: 280px; padding: 16px; border: 1px solid #c8c6c4; border-radius: 8px; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+#flyout { position: absolute; top: 56px; right: 16px; width: 360px; padding: 24px; border: 2px solid #8a8886; border-radius: 4px; background: #fff4ce; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 #flyout h2 { margin: 0 0 8px; font-size: 18px; }
 </style></head><body><header><button id="account" aria-expanded="false" aria-controls="flyout">Account</button></header>
 <main><h1>Your account</h1></main>
