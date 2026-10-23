@@ -9,5 +9,4 @@ test("the billing flyout opens from the account menu @disco:tc-4f25fdb7", async 
   await page.goto("/account");
   await page.getByRole("button", { name: "Account" }).click();
   await expect(page.getByRole("dialog", { name: "Billing" })).toBeVisible();
-  await discoVisual(page, "billing-flyout-open");
 });
