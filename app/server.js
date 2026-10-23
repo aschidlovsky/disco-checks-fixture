@@ -3,6 +3,17 @@ const http = require("node:http");
 const port = Number(process.env.PORT || 4000);
 const apiToken = process.env.E2E_API_TOKEN;
 const todos = [];
+// INI-109 F3 live leg: an account menu that opens a billing flyout.
+const ACCOUNT_PAGE = `<!doctype html><html><head><title>Account</title><style>
+body { font-family: sans-serif; margin: 0; }
+header { display: flex; justify-content: flex-end; padding: 12px 16px; background: #f3f2f1; }
+#flyout { position: absolute; top: 56px; right: 16px; width: 280px; padding: 16px; border: 1px solid #c8c6c4; border-radius: 8px; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+#flyout h2 { margin: 0 0 8px; font-size: 18px; }
+</style></head><body><header><button id="account" aria-expanded="false" aria-controls="flyout">Account</button></header>
+<main><h1>Your account</h1></main>
+<div id="flyout" role="dialog" aria-labelledby="billing-title" hidden><h2 id="billing-title">Billing</h2><p>Plan: Team</p><p>Next invoice: 1 November</p></div>
+<script>document.getElementById("account").addEventListener("click", (event) => { const flyout = document.getElementById("flyout"); flyout.hidden = !flyout.hidden; event.currentTarget.setAttribute("aria-expanded", String(!flyout.hidden)); });</script>
+</body></html>`;
 let nextTodoId = 1;
 http.createServer((req, res) => {
   res.setHeader("content-type", "application/json");
@@ -14,6 +25,10 @@ http.createServer((req, res) => {
     const items = todos.filter((todo) => !todo.deleted).map((todo) => `<li data-id="${escape(todo.id)}">${escape(todo.title)}</li>`).join("");
     res.setHeader("content-type", "text/html; charset=utf-8");
     return res.end(`<!doctype html><html><head><title>Todos</title></head><body><h1>My todo list</h1><p>Everything you still have to do, newest last.</p><ul id="todos">${items}</ul></body></html>`);
+  }
+  if (req.method === "GET" && req.url === "/account") {
+    res.setHeader("content-type", "text/html; charset=utf-8");
+    return res.end(ACCOUNT_PAGE);
   }
   if (req.method === "POST" && req.url === "/todos") {
     let body = "";
