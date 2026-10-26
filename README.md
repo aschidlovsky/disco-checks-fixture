@@ -17,3 +17,4 @@ INI-109 F4b leg 2: a commit that leaves the look alone (the next default-branch 
 INI-109 F4b leg 2: confirm run 2.
 INI-109 F4b leg 2: confirm run 3.
 INI-109 F4b leg 2: confirm run 4.
+INI-109 F4b leg 2: confirm run 5.
