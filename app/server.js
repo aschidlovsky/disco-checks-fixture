@@ -14,6 +14,14 @@ header { display: flex; justify-content: flex-end; padding: 12px 16px; backgroun
 <div id="flyout" role="dialog" aria-labelledby="billing-title" hidden><h2 id="billing-title">Billing</h2><p>Plan: Team</p><p>Next invoice: 1 November</p></div>
 <script>document.getElementById("account").addEventListener("click", (event) => { const flyout = document.getElementById("flyout"); flyout.hidden = !flyout.hidden; event.currentTarget.setAttribute("aria-expanded", String(!flyout.hidden)); });</script>
 </body></html>`;
+// INI-109 F7 live leg: the plans page (no header).
+const PLANS_PAGE = `<!doctype html><html><head><title>Plans</title><style>
+body { font-family: sans-serif; margin: 0; padding: 24px; }
+.plan { width: 360px; padding: 24px; margin-bottom: 16px; border: 2px solid #8a8886; border-radius: 12px; background: #faf9f8; }
+</style></head><body><h1>Plans</h1>
+<div class="plan"><h2>Team</h2><p>For small teams.</p></div>
+<div class="plan"><h2>Business</h2><p>For growing companies.</p></div>
+</body></html>`;
 let nextTodoId = 1;
 http.createServer((req, res) => {
   res.setHeader("content-type", "application/json");
@@ -25,6 +33,11 @@ http.createServer((req, res) => {
     const items = todos.filter((todo) => !todo.deleted).map((todo) => `<li data-id="${escape(todo.id)}">${escape(todo.title)}</li>`).join("");
     res.setHeader("content-type", "text/html; charset=utf-8");
     return res.end(`<!doctype html><html><head><title>Todos</title></head><body><h1>My todo list</h1><p>Everything you still have to do, newest last.</p><ul id="todos">${items}</ul></body></html>`);
+  }
+  // INI-109 F7 live leg: a plain page with no header (its own checkpoint).
+  if (req.method === "GET" && req.url === "/plans") {
+    res.setHeader("content-type", "text/html; charset=utf-8");
+    return res.end(PLANS_PAGE);
   }
   if (req.method === "GET" && req.url === "/account") {
     res.setHeader("content-type", "text/html; charset=utf-8");
