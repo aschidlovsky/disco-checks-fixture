@@ -21,3 +21,4 @@ INI-109 F4b leg 2: confirm run 5.
 INI-109 F4b leg 2: confirm run 6.
 INI-109 F4b leg 2: confirm run post-deploy-1.
 INI-109 F4b leg 2: confirm run post-deploy-2.
+- INI-109 F7 live leg: re-baseline run (account-page, plans-page checkpoints).
