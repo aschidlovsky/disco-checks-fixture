@@ -34,7 +34,7 @@ form { max-width: 320px; display: grid; gap: 12px; }
 const ORDERS_PAGE = `<!doctype html><html><head><title>Orders</title><style>
 body { font-family: sans-serif; margin: 0; padding: 24px; background: #ffffff; color: #201f1e; }
 @media (prefers-color-scheme: dark) { body { background: #1b1a19; color: #f3f2f1; } .order { background: #292827; border-color: #605e5c; } }
-.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
 .order { padding: 16px; border: 2px solid #c8c6c4; border-radius: 12px; background: #faf9f8; }
 </style></head><body><h1>Your orders</h1><div class="grid">
