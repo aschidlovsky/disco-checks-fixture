@@ -20,3 +20,4 @@ INI-109 F4b leg 2: confirm run 4.
 INI-109 F4b leg 2: confirm run 5.
 INI-109 F4b leg 2: confirm run 6.
 INI-109 F4b leg 2: confirm run post-deploy-1.
+INI-109 F4b leg 2: confirm run post-deploy-2.
