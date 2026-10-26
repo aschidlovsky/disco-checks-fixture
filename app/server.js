@@ -22,10 +22,57 @@ body { font-family: sans-serif; margin: 0; padding: 24px; }
 <div class="plan"><h2>Team</h2><p>For small teams.</p></div>
 <div class="plan"><h2>Business</h2><p>For growing companies.</p></div>
 </body></html>`;
+// INI-109 F5 live leg: pages a page tour captures — a sign-in form, and an orders grid only a signed-in person sees.
+// A session cookie (set by POST /login, checked against the mock auth service) is the only way in: no API token.
+const sessions = new Set();
+const LOGIN_PAGE = `<!doctype html><html><head><title>Sign in</title><style>
+body { font-family: sans-serif; margin: 0; padding: 48px 24px; background: #faf9f8; color: #201f1e; }
+@media (prefers-color-scheme: dark) { body { background: #1b1a19; color: #f3f2f1; } }
+form { max-width: 320px; display: grid; gap: 12px; }
+</style></head><body><h1>Sign in</h1><form method="post" action="/login"><label>Username <input name="username"></label>
+<label>Password <input name="password" type="password"></label><button>Sign in</button></form></body></html>`;
+const ORDERS_PAGE = `<!doctype html><html><head><title>Orders</title><style>
+body { font-family: sans-serif; margin: 0; padding: 24px; background: #ffffff; color: #201f1e; }
+@media (prefers-color-scheme: dark) { body { background: #1b1a19; color: #f3f2f1; } .order { background: #292827; border-color: #605e5c; } }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+.order { padding: 16px; border: 2px solid #c8c6c4; border-radius: 12px; background: #faf9f8; }
+</style></head><body><h1>Your orders</h1><div class="grid">
+<div class="order"><h2>#1001</h2><p>3 items · Shipped</p></div><div class="order"><h2>#1002</h2><p>1 item · Packing</p></div>
+<div class="order"><h2>#1003</h2><p>5 items · Delivered</p></div><div class="order"><h2>#1004</h2><p>2 items · Shipped</p></div>
+<div class="order"><h2>#1005</h2><p>4 items · Delivered</p></div><div class="order"><h2>#1006</h2><p>1 item · Returned</p></div>
+</div></body></html>`;
+const cookieOf = (req) => (/(?:^|;\s*)sid=([^;]+)/.exec(req.headers.cookie || "") || [])[1];
+const html = (res, page) => { res.setHeader("content-type", "text/html; charset=utf-8"); return res.end(page); };
 let nextTodoId = 1;
 http.createServer((req, res) => {
   res.setHeader("content-type", "application/json");
   if (req.url === "/health") return res.end(JSON.stringify({ ok: true }));
+  // INI-109 F5 live leg: the sign-in form and the signed-in orders grid (cookie sessions, before the API-token rule).
+  if (req.method === "GET" && req.url.startsWith("/login")) return html(res, LOGIN_PAGE);
+  if (req.method === "POST" && req.url === "/login") {
+    let body = "";
+    req.on("data", (chunk) => { body += chunk; });
+    return req.on("end", () => {
+      const fields = (req.headers["content-type"] || "").includes("json") ? JSON.parse(body || "{}") : Object.fromEntries(new URLSearchParams(body));
+      const auth = http.request({ host: "127.0.0.1", port: Number(process.env.MOCK_AUTH_PORT || 4010), path: "/login", method: "POST", headers: { "content-type": "application/json" } }, (answer) => {
+        answer.resume();
+        if (answer.statusCode !== 200) { res.statusCode = 401; return html(res, LOGIN_PAGE); }
+        const sid = require("node:crypto").randomBytes(16).toString("hex");
+        sessions.add(sid);
+        res.statusCode = 303;
+        res.setHeader("set-cookie", `sid=${sid}; Path=/; HttpOnly; SameSite=Lax`);
+        res.setHeader("location", "/orders");
+        return res.end();
+      });
+      auth.on("error", () => { res.statusCode = 502; res.end(); });
+      auth.end(JSON.stringify({ username: fields.username, password: fields.password }));
+    });
+  }
+  if (req.method === "GET" && req.url === "/orders") {
+    if (!sessions.has(cookieOf(req))) { res.statusCode = 302; res.setHeader("location", "/login?next=%2Forders"); return res.end(); }
+    return html(res, ORDERS_PAGE);
+  }
   if (req.headers["x-api-token"] !== apiToken || !apiToken) { res.statusCode = 403; return res.end(JSON.stringify({ error: "forbidden" })); }
   if (req.method === "GET" && req.url === "/todos") return res.end(JSON.stringify(todos.filter((todo) => !todo.deleted)));
   if (req.method === "GET" && req.url === "/ui") {
