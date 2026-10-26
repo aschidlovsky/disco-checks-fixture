@@ -14,3 +14,4 @@ Deleted todos are soft-deleted: they stay in memory with `deleted: true` and are
 <!-- PTR-1 live leg 2026-10-22: main moves, so the profile image rebuilds -->
 
 INI-109 F4b leg 2: a commit that leaves the look alone (the next default-branch run confirms the unreviewed flyout change).
+INI-109 F4b leg 2: confirm run 2.
