@@ -12,3 +12,5 @@ Deleted todos are soft-deleted: they stay in memory with `deleted: true` and are
 <!-- LPB-1 live leg 2026-10-20: link an existing PR to a bug -->
 <!-- MPV-1 live leg: a merged PR keeps its head verdict. -->
 <!-- PTR-1 live leg 2026-10-22: main moves, so the profile image rebuilds -->
+
+INI-109 F4b leg 2: a commit that leaves the look alone (the next default-branch run confirms the unreviewed flyout change).
