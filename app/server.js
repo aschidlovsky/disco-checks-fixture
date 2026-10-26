@@ -6,7 +6,7 @@ const todos = [];
 // INI-109 F3 live leg: an account menu that opens a billing flyout.
 const ACCOUNT_PAGE = `<!doctype html><html><head><title>Account</title><style>
 body { font-family: sans-serif; margin: 0; }
-header { display: flex; justify-content: flex-end; padding: 12px 16px; background: #f3f2f1; }
+header { display: flex; justify-content: flex-end; padding: 12px 16px; background: #1f7a4d; }
 #flyout { position: absolute; top: 56px; right: 16px; width: 400px; padding: 44px; border: 4px solid #5c2e91; border-radius: 20px; background: #efe6f7; color: #2b1a40; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 #flyout h2 { margin: 0 0 12px; font-size: 26px; color: #ffb900; letter-spacing: 0.02em; }
 </style></head><body><header><button id="account" aria-expanded="false" aria-controls="flyout">Account</button></header>
@@ -18,7 +18,9 @@ header { display: flex; justify-content: flex-end; padding: 12px 16px; backgroun
 const PLANS_PAGE = `<!doctype html><html><head><title>Plans</title><style>
 body { font-family: sans-serif; margin: 0; padding: 24px; }
 .plan { width: 360px; padding: 24px; margin-bottom: 16px; border: 2px solid #8a8886; border-radius: 12px; background: #faf9f8; }
+#promo { width: 100%; height: 160px; margin-bottom: 16px; background: #d13438; }
 </style></head><body><h1>Plans</h1>
+<div id="promo"></div>
 <div class="plan"><h2>Team</h2><p>For small teams.</p></div>
 <div class="plan"><h2>Business</h2><p>For growing companies.</p></div>
 </body></html>`;
