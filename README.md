@@ -26,3 +26,5 @@ INI-109 F4b leg 2: confirm run post-deploy-2.
 - INI-109 F7 live leg: laptop-image baselines (replayed to the laptop host only).
 - INI-109 F7 post-deploy leg: baselines in DEV's current image.
 - INI-109 F7 post-deploy leg: re-pushed after the deploy's pod swap.
+
+INI-112 F2c live leg 2026-10-26T23:36:42Z
