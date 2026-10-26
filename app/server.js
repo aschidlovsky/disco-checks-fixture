@@ -18,7 +18,7 @@ header { display: flex; justify-content: flex-end; padding: 12px 16px; backgroun
 const PLANS_PAGE = `<!doctype html><html><head><title>Plans</title><style>
 body { font-family: sans-serif; margin: 0; padding: 24px; }
 .plan { width: 360px; padding: 24px; margin-bottom: 16px; border: 2px solid #8a8886; border-radius: 12px; background: #faf9f8; }
-</style></head><body><div style="margin: -24px -24px 24px; padding: 20px 24px; background: #d13438; color: #fff; font-size: 20px;">Debug build — do not ship</div><h1>Plans</h1>
+</style></head><body><h1>Plans</h1>
 <div class="plan"><h2>Team</h2><p>For small teams.</p></div>
 <div class="plan"><h2>Business</h2><p>For growing companies.</p></div>
 </body></html>`;
