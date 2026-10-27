@@ -30,3 +30,5 @@ INI-109 F4b leg 2: confirm run post-deploy-2.
 INI-112 F2c live leg 2026-10-26T23:36:42Z
 
 <!-- INI-109 F5 post-deploy leg (main baseline) -->
+
+<!-- INI-109 F5b-1 live leg (main baseline) -->
