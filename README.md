@@ -32,3 +32,4 @@ INI-112 F2c live leg 2026-10-26T23:36:42Z
 <!-- INI-109 F5 post-deploy leg (main baseline) -->
 
 <!-- INI-109 F5b-1 live leg (main baseline) -->
+- INI-109 F5b-1 post-deploy check (2026-10-27).
