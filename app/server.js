@@ -48,6 +48,18 @@ let nextTodoId = 1;
 http.createServer((req, res) => {
   res.setHeader("content-type", "application/json");
   if (req.url === "/health") return res.end(JSON.stringify({ ok: true }));
+  // INI-109 F5b-2 live leg: the start page a link crawl reads (signed in, it also links the orders grid).
+  if (req.method === "GET" && (req.url === "/" || req.url.startsWith("/?"))) {
+    const signedIn = sessions.has(cookieOf(req));
+    return html(res, `<!doctype html><html><head><title>Fixture home</title></head><body><h1>Fixture app</h1><nav>
+<a href="/about">About</a> <a href="/pricing?plan=pro#compare">Pricing</a> <a href="/about">About again</a>
+${signedIn ? '<a href="/orders">Your orders</a>' : '<a href="/login">Sign in</a>'}
+<a href="https://example.com/docs">Docs (elsewhere)</a> <a href="mailto:help@example.com">Help</a></nav></body></html>`);
+  }
+  if (req.method === "GET" && (req.url === "/about" || req.url.startsWith("/pricing"))) {
+    const title = req.url === "/about" ? "About the fixture" : "Pricing";
+    return html(res, `<!doctype html><html><head><title>${title}</title></head><body><h1>${title}</h1><p>A public page the start page links to.</p><a href="/">Home</a></body></html>`);
+  }
   // INI-109 F5 live leg: the sign-in form and the signed-in orders grid (cookie sessions, before the API-token rule).
   if (req.method === "GET" && req.url.startsWith("/login")) return html(res, LOGIN_PAGE);
   if (req.method === "POST" && req.url === "/login") {
