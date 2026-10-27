@@ -8,7 +8,7 @@ const { test } = require("@playwright/test");
 
 const SLUG = /^[a-z0-9][a-z0-9-]{0,62}$/;
 const MAX_HEIGHT = 4096;
-const MAX_FINDINGS = 20;
+const MAX_PER_KIND = 10;
 const MAX_BODY_BYTES = 3000;
 const AXE_BUDGET_MS = 5000;
 const SEVERITIES = ["critical", "serious", "moderate", "minor"];
@@ -65,12 +65,15 @@ async function discoVisual(page, slug, { mask = [] } = {}) {
   }
   const a11y = axe.nodes.map((node, index) => finding("a11y", { ...node, identity: read?.placed[index]?.identity }, read?.placed[index]?.rect, image));
   const health = (read?.health ?? []).map((entry) => finding("health", entry, entry.rect, image));
-  for (const error of errors.splice(0)) {
+  // Errors are page health, so they are kept only when the health read worked.
+  for (const error of read ? errors.splice(0) : []) {
     const target = (String(error.message).split("\n")[0].replace(/\d+/g, "#").trim() || "error").slice(0, 120);
     if (!health.some((entry) => entry.rule === error.rule && entry.target === target)) health.push({ kind: "health", rule: error.rule, target, severity: error.severity });
   }
-  const all = [...a11y, ...health].sort((a, b) => SEVERITIES.indexOf(a.severity) - SEVERITIES.indexOf(b.severity));
-  const findings = all.slice(0, MAX_FINDINGS);
+  // Each kind keeps its own worst findings, so one kind's many findings never push the other's out.
+  const worst = (list) => [...list].sort((a, b) => SEVERITIES.indexOf(a.severity) - SEVERITIES.indexOf(b.severity));
+  const all = [...a11y, ...health];
+  const findings = [...worst(a11y).slice(0, MAX_PER_KIND), ...worst(health).slice(0, MAX_PER_KIND)];
   const reads = { a11y: axe.read, health: read ? "read" : "failed" };
   const body = () => JSON.stringify({ v: 1, reads, findings, dropped: all.length - findings.length });
   while (findings.length > 0 && Buffer.byteLength(body()) > MAX_BODY_BYTES) findings.pop();
