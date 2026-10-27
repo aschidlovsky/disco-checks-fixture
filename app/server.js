@@ -22,6 +22,17 @@ body { font-family: sans-serif; margin: 0; padding: 24px; }
 <div class="plan"><h2>Team</h2><p>For small teams.</p></div>
 <div class="plan"><h2>Business</h2><p>For growing companies.</p></div>
 </body></html>`;
+// INI-109 F8a live leg: a cart on a phone — a product name in a fixed-width line, and a buy button. The product
+// picture has no alt text (an accessibility finding main already has, so pull requests read it as known).
+const CART_PAGE = `<!doctype html><html lang="en"><head><title>Cart</title><style>
+body { font-family: sans-serif; margin: 0; padding: 16px; }
+.product { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.name { width: 200px; white-space: nowrap; overflow: hidden; font-size: 18px; }
+.buy { width: 160px; height: 44px; font-size: 16px; }
+</style></head><body><main><h1>Your cart</h1>
+<div class="product"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23c8c6c4'/%3E%3C/svg%3E" width="40" height="40">
+<span class="name" id="product-name">Desk lamp</span></div>
+<button class="buy" id="buy">Buy now</button></main></body></html>`;
 // INI-109 F5 live leg: pages a page tour captures — a sign-in form, and an orders grid only a signed-in person sees.
 // A session cookie (set by POST /login, checked against the mock auth service) is the only way in: no API token.
 const sessions = new Set();
@@ -97,6 +108,10 @@ ${signedIn ? '<a href="/orders">Your orders</a>' : '<a href="/login">Sign in</a>
   if (req.method === "GET" && req.url === "/plans") {
     res.setHeader("content-type", "text/html; charset=utf-8");
     return res.end(PLANS_PAGE);
+  }
+  if (req.method === "GET" && req.url === "/cart") {
+    res.setHeader("content-type", "text/html; charset=utf-8");
+    return res.end(CART_PAGE);
   }
   if (req.method === "GET" && req.url === "/account") {
     res.setHeader("content-type", "text/html; charset=utf-8");

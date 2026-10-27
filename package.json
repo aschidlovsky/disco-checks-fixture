@@ -10,6 +10,7 @@
     "list:e2e": "playwright test --list"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
     "@playwright/test": "1.47.2"
   }
 }
