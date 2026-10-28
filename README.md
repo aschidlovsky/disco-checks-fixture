@@ -36,3 +36,7 @@ INI-112 F2c live leg 2026-10-26T23:36:42Z
 - (re-sent after the DEV deploy)
 - INI-109 F8a live leg: main run retry after a profile image build timed out.
 - INI-109 F8a live leg: main run on the worktree host.
+- INI-109 F8a live legs: main run (after the playwright-browsers extension).
+- INI-109 F8a live legs: main run with the cart check.
+- INI-109 F8a live legs: main run on the worktree host (retry).
+- INI-109 F8a live legs: main run, fresh push set.
