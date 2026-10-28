@@ -9,10 +9,21 @@ body { font-family: sans-serif; margin: 0; }
 header { display: flex; justify-content: flex-end; padding: 12px 16px; background: #f3f2f1; }
 #flyout { position: absolute; top: 56px; right: 16px; width: 400px; padding: 44px; border: 4px solid #5c2e91; border-radius: 20px; background: #efe6f7; color: #2b1a40; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 #flyout h2 { margin: 0 0 12px; font-size: 26px; color: #ffb900; letter-spacing: 0.02em; }
-</style></head><body><header><button id="account" aria-expanded="false" aria-controls="flyout">Account</button></header>
+</style></head><body><header><button id="account" aria-expanded="false" aria-controls="flyout">Account</button> <button id="billing" type="button" aria-expanded="false" aria-controls="flyout">Billing</button></header>
 <main><h1>Your account</h1></main>
-<div id="flyout" role="dialog" aria-labelledby="billing-title" hidden><h2 id="billing-title">Billing</h2><p>Plan: Team</p><p>Next invoice: 1 November</p></div>
-<script>document.getElementById("account").addEventListener("click", (event) => { const flyout = document.getElementById("flyout"); flyout.hidden = !flyout.hidden; event.currentTarget.setAttribute("aria-expanded", String(!flyout.hidden)); });</script>
+<div id="flyout" role="dialog" aria-labelledby="billing-title" hidden><h2 id="billing-title">Billing</h2><p>Plan: Team</p><p>Next invoice: 1 November</p><button id="billing-close" type="button">Close</button></div>
+<script>
+const flyout = document.getElementById("flyout");
+let opener = null;
+// INI-109 F10 live leg: the flyout moves focus in on open, closes on Escape or Close, and returns focus to what opened it.
+const closeFlyout = () => { flyout.hidden = true; for (const id of ["account", "billing"]) document.getElementById(id).setAttribute("aria-expanded", "false"); if (opener) opener.focus(); };
+for (const id of ["account", "billing"]) document.getElementById(id).addEventListener("click", (event) => {
+  if (!flyout.hidden) return closeFlyout();
+  opener = event.currentTarget; flyout.hidden = false; opener.setAttribute("aria-expanded", "true"); document.getElementById("billing-close").focus();
+});
+document.getElementById("billing-close").addEventListener("click", closeFlyout);
+flyout.addEventListener("keydown", (event) => { if (event.key === "Escape") closeFlyout(); });
+</script>
 </body></html>`;
 // INI-109 F7 live leg: the plans page (no header).
 const PLANS_PAGE = `<!doctype html><html><head><title>Plans</title><style>
@@ -98,42 +109,6 @@ ${signedIn ? '<a href="/orders">Your orders</a>' : '<a href="/login">Sign in</a>
   }
   if (req.headers["x-api-token"] !== apiToken || !apiToken) { res.statusCode = 403; return res.end(JSON.stringify({ error: "forbidden" })); }
   if (req.method === "GET" && req.url === "/todos") return res.end(JSON.stringify(todos.filter((todo) => !todo.deleted)));
-  if (req.method === "GET" && req.url === "/account") {
-    res.setHeader("content-type", "text/html; charset=utf-8");
-    return res.end(`<!doctype html>
-<html>
-  <head><title>Account</title></head>
-  <body>
-    <h1>Account</h1>
-    <button id="billing-button" type="button">Billing</button>
-    <div id="billing-flyout" role="dialog" aria-labelledby="billing-title" hidden>
-      <h2 id="billing-title">Billing</h2>
-      <p>Plan: Starter</p>
-      <p>Next invoice: November 15, 2026</p>
-      <button id="billing-close" type="button">Close</button>
-    </div>
-    <script>
-      const billingButton = document.querySelector("#billing-button");
-      const billingFlyout = document.querySelector("#billing-flyout");
-      const billingClose = document.querySelector("#billing-close");
-
-      const closeBilling = () => {
-        billingFlyout.hidden = true;
-        billingButton.focus();
-      };
-
-      billingButton.addEventListener("click", () => {
-        billingFlyout.hidden = false;
-        billingClose.focus();
-      });
-      billingClose.addEventListener("click", closeBilling);
-      billingFlyout.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") closeBilling();
-      });
-    </script>
-  </body>
-</html>`);
-  }
   if (req.method === "GET" && req.url === "/ui") {
     const escape = (text) => String(text ?? "").replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
     const items = todos.filter((todo) => !todo.deleted).map((todo) => `<li data-id="${escape(todo.id)}">${escape(todo.title)}</li>`).join("");
