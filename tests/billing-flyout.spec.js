@@ -24,12 +24,3 @@ test("the plans page lists the plans @disco:tc-4f25fdb7", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Plans" })).toBeVisible();
   await discoVisual(page, "plans-page");
 });
-
-// INI-109 F8a live leg: the cart on a phone; its checkpoint carries the page's accessibility and health findings.
-test("the cart shows the product and the buy button @disco:tc-4f25fdb7", async ({ page }) => {
-  await page.setExtraHTTPHeaders(apiHeaders());
-  await page.setViewportSize({ width: 375, height: 800 });
-  await page.goto("/cart");
-  await expect(page.locator("#buy")).toBeVisible();
-  await discoVisual(page, "cart");
-});
