@@ -12,7 +12,7 @@ header { display: flex; justify-content: flex-end; padding: 12px 16px; backgroun
 </style></head><body><header><button id="account" aria-expanded="false" aria-controls="flyout">Account</button></header>
 <main><h1>Your account</h1></main>
 <div id="flyout" role="dialog" aria-labelledby="billing-title" hidden><h2 id="billing-title">Billing</h2><p>Plan: Team</p><p>Next invoice: 1 November</p></div>
-<script>document.getElementById("account").addEventListener("click", (event) => { const flyout = document.getElementById("flyout"); flyout.hidden = !flyout.hidden; event.currentTarget.setAttribute("aria-expanded", String(!flyout.hidden)); });</script>
+<script>document.getElementById("account").addEventListener("click", (event) => { const flyout = document.getElementById("flyout"); flyout.hidden = true; event.currentTarget.setAttribute("aria-expanded", String(!flyout.hidden)); });</script>
 </body></html>`;
 // INI-109 F7 live leg: the plans page (no header).
 const PLANS_PAGE = `<!doctype html><html><head><title>Plans</title><style>
