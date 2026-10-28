@@ -98,6 +98,42 @@ ${signedIn ? '<a href="/orders">Your orders</a>' : '<a href="/login">Sign in</a>
   }
   if (req.headers["x-api-token"] !== apiToken || !apiToken) { res.statusCode = 403; return res.end(JSON.stringify({ error: "forbidden" })); }
   if (req.method === "GET" && req.url === "/todos") return res.end(JSON.stringify(todos.filter((todo) => !todo.deleted)));
+  if (req.method === "GET" && req.url === "/account") {
+    res.setHeader("content-type", "text/html; charset=utf-8");
+    return res.end(`<!doctype html>
+<html>
+  <head><title>Account</title></head>
+  <body>
+    <h1>Account</h1>
+    <button id="billing-button" type="button">Billing</button>
+    <div id="billing-flyout" role="dialog" aria-labelledby="billing-title" hidden>
+      <h2 id="billing-title">Billing</h2>
+      <p>Plan: Starter</p>
+      <p>Next invoice: November 15, 2026</p>
+      <button id="billing-close" type="button">Close</button>
+    </div>
+    <script>
+      const billingButton = document.querySelector("#billing-button");
+      const billingFlyout = document.querySelector("#billing-flyout");
+      const billingClose = document.querySelector("#billing-close");
+
+      const closeBilling = () => {
+        billingFlyout.hidden = true;
+        billingButton.focus();
+      };
+
+      billingButton.addEventListener("click", () => {
+        billingFlyout.hidden = false;
+        billingClose.focus();
+      });
+      billingClose.addEventListener("click", closeBilling);
+      billingFlyout.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeBilling();
+      });
+    </script>
+  </body>
+</html>`);
+  }
   if (req.method === "GET" && req.url === "/ui") {
     const escape = (text) => String(text ?? "").replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
     const items = todos.filter((todo) => !todo.deleted).map((todo) => `<li data-id="${escape(todo.id)}">${escape(todo.title)}</li>`).join("");
