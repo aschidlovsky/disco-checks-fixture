@@ -16,7 +16,7 @@ header { display: flex; justify-content: flex-end; padding: 12px 16px; backgroun
 const flyout = document.getElementById("flyout");
 let opener = null;
 // INI-109 F10 live leg: the flyout moves focus in on open, closes on Escape or Close, and returns focus to what opened it.
-const closeFlyout = () => { flyout.hidden = true; for (const id of ["account", "billing"]) document.getElementById(id).setAttribute("aria-expanded", "false"); if (opener) opener.focus(); };
+const closeFlyout = () => { flyout.hidden = true; for (const id of ["account", "billing"]) document.getElementById(id).setAttribute("aria-expanded", "false"); };
 for (const id of ["account", "billing"]) document.getElementById(id).addEventListener("click", (event) => {
   if (!flyout.hidden) return closeFlyout();
   opener = event.currentTarget; flyout.hidden = false; opener.setAttribute("aria-expanded", "true"); document.getElementById("billing-close").focus();
