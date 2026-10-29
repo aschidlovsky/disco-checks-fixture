@@ -43,7 +43,7 @@ body { font-family: sans-serif; margin: 0; padding: 16px; }
 </style></head><body><main><h1>Your cart</h1>
 <div class="product"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23c8c6c4'/%3E%3C/svg%3E" width="40" height="40">
 <span class="name" id="product-name">Desk lamp</span></div>
-<button class="buy" id="buy">Buy now</button></main></body></html>`;
+<button class="buy" id="buy"><svg width="20" height="20" aria-hidden="true"><path d="M2 4h16l-2 10H4z" fill="currentColor"/></svg></button></main></body></html>`;
 // INI-109 F5 live leg: pages a page tour captures — a sign-in form, and an orders grid only a signed-in person sees.
 // A session cookie (set by POST /login, checked against the mock auth service) is the only way in: no API token.
 const sessions = new Set();
