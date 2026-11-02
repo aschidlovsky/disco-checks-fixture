@@ -69,7 +69,7 @@ const html = (res, page) => { res.setHeader("content-type", "text/html; charset=
 let nextTodoId = 1;
 http.createServer((req, res) => {
   res.setHeader("content-type", "application/json");
-  if (req.url === "/health") return res.end(JSON.stringify({ ok: true }));
+  if (req.url === "/health") { res.statusCode = 503; return res.end(JSON.stringify({ ok: false })); }
   // INI-109 F5b-2 live leg: the start page a link crawl reads (signed in, it also links the orders grid).
   if (req.method === "GET" && (req.url === "/" || req.url.startsWith("/?"))) {
     const signedIn = sessions.has(cookieOf(req));
