@@ -69,7 +69,7 @@ const html = (res, page) => { res.setHeader("content-type", "text/html; charset=
 let nextTodoId = 1;
 http.createServer((req, res) => {
   res.setHeader("content-type", "application/json");
-  if (req.url === "/health") { res.statusCode = 503; return res.end(JSON.stringify({ ok: false })); }
+  if (req.url === "/health") return res.end(JSON.stringify({ ok: true }));
   // INI-109 F5b-2 live leg: the start page a link crawl reads (signed in, it also links the orders grid).
   if (req.method === "GET" && (req.url === "/" || req.url.startsWith("/?"))) {
     const signedIn = sessions.has(cookieOf(req));
@@ -108,7 +108,7 @@ ${signedIn ? '<a href="/orders">Your orders</a>' : '<a href="/login">Sign in</a>
     return html(res, ORDERS_PAGE);
   }
   if (req.headers["x-api-token"] !== apiToken || !apiToken) { res.statusCode = 403; return res.end(JSON.stringify({ error: "forbidden" })); }
-  if (req.method === "GET" && req.url === "/todos") return res.end(JSON.stringify(todos.filter((todo) => !todo.deleted)));
+  if (req.method === "GET" && req.url === "/todos") return res.end(JSON.stringify(todos.filter((todo) => !todo.deleted).map((todo) => ({ ...todo, title: todo.title.toUpperCase() }))));
   if (req.method === "GET" && req.url === "/ui") {
     const escape = (text) => String(text ?? "").replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
     const items = todos.filter((todo) => !todo.deleted).map((todo) => `<li data-id="${escape(todo.id)}">${escape(todo.title)}</li>`).join("");
